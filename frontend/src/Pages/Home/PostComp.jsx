@@ -6,9 +6,8 @@ import {
   CardActions,
   IconButton,
   Typography,
-  colors,
 } from "@mui/material";
-import { Favorite, Share, MoreVert } from "@mui/icons-material";
+import { MoreVert } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useFetchImageQuery } from "../../Store/api/PostApi";
@@ -44,11 +43,6 @@ const PostComp = ({ data }) => {
       }}
     >
       <CardHeader
-        // avatar={
-        //   // <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-        //   //   {/* R */}
-        //   // </Avatar>
-        // }
         action={
           <IconButton aria-label="settings">
             <MoreVert />

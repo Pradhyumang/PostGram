@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthState";
 import { getCookie } from "../Cookie/cookie";
 import { useEffect } from "react";
+import "./public.css";
 export const PublicRoute = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();

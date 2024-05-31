@@ -3,8 +3,10 @@ import PostComp from "./PostComp";
 import { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import SearchIcon from "@mui/icons-material/Search";
+import { useLocation, useNavigate } from "react-router-dom";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import NothingToShow from "../NothingToShow";
 const initialState = {
   page: 1,
   perPage: 5,
@@ -16,6 +18,11 @@ const initialState = {
 };
 const Home = () => {
   const [queryParams, setQueryParams] = useState(initialState);
+  const navigate = useNavigate();
+  // const { search } = useParams();
+  const { search: urlParam } = useLocation();
+  const search = new URLSearchParams(urlParam).get("search");
+  // console.log(search);
   const {
     // isError,
     isLoading,
@@ -44,6 +51,17 @@ const Home = () => {
       document.removeEventListener("scroll", onScroll);
     };
   }, [queryParams, isFetching]);
+  useEffect(() => {
+    if (search || search === "") {
+      setQueryParams({
+        ...queryParams,
+        page: 1,
+        search: search.trim(),
+        isSearch: true,
+        isSearchEmpty: false,
+      });
+    }
+  }, [search]);
   // posts
   let posts;
   if (isLoading) {
@@ -52,42 +70,39 @@ const Home = () => {
     </Box>;
   }
   if (isSuccess && postData) {
+    if (postData?.data?.total == 0) {
+      return (
+        <center>
+          <div style={{ marginTop: "20px" }} />
+          <NothingToShow />
+        </center>
+      );
+    }
     posts = postData?.data?.data.map((data, index) => {
       // console.log(data);
       return <PostComp key={index} data={data} />;
     });
   }
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(null, args);
-      }, delay);
-    };
-  };
-  const handleSearchChange = debounce((e) => {
-    setQueryParams({
-      ...queryParams,
-      page: 1,
-      search: e.target.value,
-      isSearch: true,
-      isSearchEmpty: false,
-    });
-  }, 750);
 
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "flex-end", mt: 1 }}>
-        <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
-        <TextField
-          id="input-with-sx"
-          label="Search"
-          variant="standard"
-          fullWidth
-          onChange={handleSearchChange}
-        />
-      </Box>
+      <div style={{ position: "absolute" }}>
+        <Fab
+          size="medium"
+          color="secondary"
+          aria-label="add"
+          sx={{
+            position: "fixed",
+            bottom: "35px",
+            right: "35px",
+          }}
+          onClick={() => {
+            navigate("/post");
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      </div>
       {posts}
     </>
   );

@@ -1,10 +1,7 @@
-import React, { useEffect } from "react";
-import { Tabs, Tab, Menu, MenuItem } from "@mui/material";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import React from "react";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import HomeIcon from "@mui/icons-material/Home";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { removeCookie } from "../../../Cookie/cookie";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -15,7 +12,15 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-
+import Drawer from "@mui/material/Drawer";
+import LogoutIcon from "@mui/icons-material/Logout";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import "./Navbarcss.css";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -58,110 +63,115 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 // Custom theme to enhance the navbar
-const theme = createTheme({
-  components: {
-    MuiTabs: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#1a7fba",
-          position: "sticky",
-          top: 0,
-          zIndex: 1000,
-        },
-        indicator: {
-          backgroundColor: "#ffab00",
-        },
-      },
-    },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          color: "#ffffff",
-          "&.Mui-selected": {
-            color: "#ffab00",
-          },
-        },
-      },
-    },
-  },
-});
 
 export default function NavBar() {
+  const [state, setState] = React.useState({ left: false });
   const navigate = useNavigate();
-  const location = useLocation();
-  const [value, setValue] = React.useState(0);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
-
-  useEffect(() => {
-    switch (location.pathname) {
-      case "/home":
-        setValue(0);
-        break;
-      case "/post":
-        setValue(1);
-        break;
-      case "/profile":
-        setValue(2);
-        break;
-      default:
-        setValue(false); // Reset value if no match is found
-    }
-  }, [location.pathname]);
-
-  const handleChange = (event, newValue) => {
-    event.preventDefault();
-    setValue(newValue);
-    switch (newValue) {
-      case 0:
-        navigate("/home");
-        break;
-      case 1:
-        navigate("/post");
-        break;
-      case 2:
-        // setAnchorEl(anchorRef.current);
-        // setOpen(true);
-        setAnchorEl(event.currentTarget);
-        setOpen((prevOpen) => !prevOpen);
-        break;
-      default:
-        break;
-    }
-  };
-  const handleProfile = (event) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-    setOpen(false);
-  };
-
-  const handleListKeyDown = (event) => {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === "Escape") {
-      setOpen(false);
-    }
-  };
 
   const logout = () => {
     removeCookie("accessToken");
-    handleClose();
     navigate("/");
   };
 
   const profile = () => {
-    handleClose();
     navigate("/profile");
   };
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(null, args);
+      }, delay);
+    };
+  };
 
+  const handleSearchChange = debounce((e) => {
+    // console.log(e.target.value);
+    // navigate(`/home/${e.target.value}`);
+    navigate(`/home?search=${e.target.value}`);
+  }, 750);
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+  const getIcon = (index) => {
+    switch (index) {
+      case 0:
+        return <HomeIcon />;
+      case 1:
+        return <PersonPinIcon />;
+
+      default:
+        return null;
+    }
+  };
+  const home = () => {
+    navigate("/");
+  };
+  const getTabClickUpperDivision = (index) => {
+    switch (index) {
+      case 0:
+        return home;
+      case 1:
+        return profile;
+      default:
+        return null;
+    }
+  };
+  const list = (anchor) => (
+    <Box
+      sx={{
+        width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
+      }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {["Home", "Profile"].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton onClick={getTabClickUpperDivision(index)}>
+              <ListItemIcon>{getIcon(index)}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {["Logout"].map((text) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton onClick={logout}>
+              <ListItemIcon>
+                <LogoutIcon></LogoutIcon>
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+  const anchor = "left";
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          position: "sticky",
+          top: 0,
+          zIndex: 1000,
+        }}
+        role="presentation"
+      >
         <AppBar position="static">
           <Toolbar>
             <IconButton
@@ -170,16 +180,26 @@ export default function NavBar() {
               color="inherit"
               aria-label="open drawer"
               sx={{ mr: 2 }}
+              onClick={toggleDrawer(anchor, true)}
             >
               <MenuIcon />
             </IconButton>
+            <Drawer
+              anchor={anchor}
+              open={state[anchor]}
+              onClose={toggleDrawer(anchor, false)}
+            >
+              {list(anchor)}
+            </Drawer>
+            {/* </MenuIcon> */}
+            {/* </IconButton> */}
             <Typography
               variant="h6"
               noWrap
               component="div"
               sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
             >
-              MUI
+              PostGram
             </Typography>
             <Search>
               <SearchIconWrapper>
@@ -188,60 +208,12 @@ export default function NavBar() {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                onChange={handleSearchChange}
               />
             </Search>
           </Toolbar>
         </AppBar>
       </Box>
-      <ThemeProvider theme={theme}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="icon tabs example"
-          variant="fullWidth"
-          centered
-        >
-          <Tab
-            icon={<HomeIcon />}
-            aria-label="home"
-            label="Home"
-            iconPosition="start"
-          />
-          <Tab
-            icon={<AddAPhotoIcon />}
-            aria-label="add post"
-            label="Add Post"
-            iconPosition="start"
-          />
-          <Tab
-            icon={<PersonPinIcon />}
-            aria-label="profile"
-            label="Profile"
-            iconPosition="start"
-            ref={anchorRef}
-            onClick={handleProfile}
-          />
-        </Tabs>
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          onKeyDown={handleListKeyDown}
-          slotProps={{
-            paper: {
-              style: {
-                width: anchorRef.current
-                  ? anchorRef.current.clientWidth - 10
-                  : undefined,
-              },
-            },
-          }}
-        >
-          <MenuItem onClick={profile}>Profile</MenuItem>
-          {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
-          <MenuItem onClick={logout}>Logout</MenuItem>
-        </Menu>
-      </ThemeProvider>
     </>
   );
 }

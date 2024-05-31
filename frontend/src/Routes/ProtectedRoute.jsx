@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthState";
 import { getCookie } from "../Cookie/cookie";
 import { useEffect } from "react";
+import "./protected.css";
 export const ProtectedRoute = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();

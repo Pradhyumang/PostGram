@@ -28,6 +28,28 @@ const validationSchema = Yup.object({
   //   "Must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
   // ),
 });
+const inputProbs = {
+  style: {
+    color: "white",
+    borderColor: "white",
+  },
+};
+const InputLabelProps = {
+  style: { color: "white" },
+};
+const sxx = {
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "white",
+    },
+    "&:hover fieldset": {
+      borderColor: "white",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "white",
+    },
+  },
+};
 
 export default function SignUp() {
   const [signupMutation, { isSuccess, isLoading, error }] = useSignUpMutation();
@@ -101,6 +123,9 @@ export default function SignUp() {
                 formik.touched.firstname && Boolean(formik.errors.firstname)
               }
               helperText={formik.touched.firstname && formik.errors.firstname}
+              inputProps={inputProbs}
+              InputLabelProps={InputLabelProps}
+              sx={sxx}
             />
             <TextField
               margin="normal"
@@ -115,6 +140,9 @@ export default function SignUp() {
               onBlur={formik.handleBlur}
               error={formik.touched.lastname && Boolean(formik.errors.lastname)}
               helperText={formik.touched.lastname && formik.errors.lastname}
+              inputProps={inputProbs}
+              InputLabelProps={InputLabelProps}
+              sx={sxx}
             />
             <TextField
               margin="normal"
@@ -129,6 +157,9 @@ export default function SignUp() {
               onBlur={formik.handleBlur}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
+              inputProps={inputProbs}
+              InputLabelProps={InputLabelProps}
+              sx={sxx}
             />
             <TextField
               margin="normal"
@@ -143,6 +174,9 @@ export default function SignUp() {
               onBlur={formik.handleBlur}
               error={formik.touched.username && Boolean(formik.errors.username)}
               helperText={formik.touched.username && formik.errors.username}
+              inputProps={inputProbs}
+              InputLabelProps={InputLabelProps}
+              sx={sxx}
             />
             <TextField
               margin="normal"
@@ -158,6 +192,9 @@ export default function SignUp() {
               onBlur={formik.handleBlur}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
+              inputProps={inputProbs}
+              InputLabelProps={InputLabelProps}
+              sx={sxx}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -179,7 +216,7 @@ export default function SignUp() {
               </Grid> */}
               <Grid item>
                 {"Already have an account?"}
-                <Link href="/" variant="body2">
+                <Link href="/" variant="body2" sx={{ color: "white" }}>
                   {" Sign In"}
                 </Link>
               </Grid>

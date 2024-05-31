@@ -13,8 +13,29 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useAuth } from "../../Context/AuthState";
 
-const defaultTheme = createTheme();
-
+const defaultTheme = createTheme({});
+const inputProbs = {
+  style: {
+    color: "white",
+    borderColor: "white",
+  },
+};
+const InputLabelProps = {
+  style: { color: "white" },
+};
+const sxx = {
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "white",
+    },
+    "&:hover fieldset": {
+      borderColor: "white",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "white",
+    },
+  },
+};
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
   password: Yup.string().min(8).max(15).required("Required"),
@@ -40,7 +61,7 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" sx={{ color: "white" }}>
         <CssBaseline />
         <Box
           sx={{
@@ -76,6 +97,9 @@ export default function SignIn() {
               onBlur={formik.handleBlur}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
+              inputProps={inputProbs}
+              InputLabelProps={InputLabelProps}
+              sx={sxx}
             />
             <TextField
               margin="normal"
@@ -91,6 +115,9 @@ export default function SignIn() {
               onBlur={formik.handleBlur}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
+              inputProps={inputProbs}
+              InputLabelProps={InputLabelProps}
+              sx={sxx}
             />
             <Button
               type="submit"
@@ -103,7 +130,7 @@ export default function SignIn() {
             <Grid container>
               <Grid item>
                 {"Don't have an account? "}
-                <Link href="/sign-up" variant="body2">
+                <Link href="/sign-up" variant="body2" sx={{ color: "aqua" }}>
                   {"Sign Up"}
                 </Link>
               </Grid>
