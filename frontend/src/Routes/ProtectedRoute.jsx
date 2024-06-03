@@ -13,5 +13,14 @@ export const ProtectedRoute = () => {
       navigate("/");
     }
   }, [navigate, isAuthenticated, token]);
+  useEffect(() => {
+    const rootElement = document.getElementById("root").parentElement;
+    console.log(rootElement);
+    if (rootElement) {
+      rootElement.style.backgroundImage = token
+        ? "linear-gradient(to right, #09203F, #537895)"
+        : "";
+    }
+  }, [token]);
   return <Outlet />;
 };

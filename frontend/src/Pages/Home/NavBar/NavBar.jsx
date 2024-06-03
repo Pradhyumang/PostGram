@@ -76,6 +76,9 @@ export default function NavBar() {
   const profile = () => {
     navigate("/profile");
   };
+  const home = () => {
+    navigate("/home");
+  };
   const debounce = (func, delay) => {
     let timeoutId;
     return (...args) => {
@@ -90,6 +93,10 @@ export default function NavBar() {
     // console.log(e.target.value);
     // navigate(`/home/${e.target.value}`);
     navigate(`/home?search=${e.target.value}`);
+    e.target.value = "";
+    // if (search) {
+    //   e.target.value = search;
+    // }
   }, 750);
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -113,9 +120,7 @@ export default function NavBar() {
         return null;
     }
   };
-  const home = () => {
-    navigate("/");
-  };
+
   const getTabClickUpperDivision = (index) => {
     switch (index) {
       case 0:

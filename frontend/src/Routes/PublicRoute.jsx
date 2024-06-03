@@ -13,5 +13,14 @@ export const PublicRoute = () => {
       navigate("/home");
     }
   }, [navigate, isAuthenticated, token]);
+  useEffect(() => {
+    const rootElement = document.getElementById("root").parentElement;
+    console.log(rootElement, "PublicRoute");
+    if (rootElement) {
+      rootElement.style.backgroundImage = token
+        ? ""
+        : "linear-gradient(to right, #2e3192, #1bffff)";
+    }
+  }, [token]);
   return <Outlet />;
 };

@@ -14,7 +14,7 @@ const initialState = {
   isMyPostsOnly: false,
   isPrivate: false,
   isSearch: false,
-  isSearchEmpty: true,
+  isHomeNav: false,
 };
 const Home = () => {
   const [queryParams, setQueryParams] = useState(initialState);
@@ -40,7 +40,7 @@ const Home = () => {
           ...queryParams,
           page: queryParams.page + 1,
           isSearch: false,
-          isSearchEmpty: false,
+          isHomeNav: false,
         });
       }
     };
@@ -52,15 +52,19 @@ const Home = () => {
     };
   }, [queryParams, isFetching]);
   useEffect(() => {
-    if (search || search === "") {
+    // console.log(search);
+    if (search || search === "" || search === null) {
       setQueryParams({
         ...queryParams,
         page: 1,
-        search: search.trim(),
+        search: search?.trim() || "",
         isSearch: true,
-        isSearchEmpty: false,
+        isHomeNav: true,
       });
     }
+    // else {
+    //   setQueryParams(initialState);
+    // }
   }, [search]);
   // posts
   let posts;
@@ -70,11 +74,14 @@ const Home = () => {
     </Box>;
   }
   if (isSuccess && postData) {
-    if (postData?.data?.total == 0) {
+    if (postData?.data?.total === 0) {
       return (
         <center>
-          <div style={{ marginTop: "20px" }} />
-          <NothingToShow />
+          {/* <div style={{ marginTop: "20px" }} /> */}
+          <NothingToShow
+            setQueryParams={setQueryParams}
+            queryParams={queryParams}
+          />
         </center>
       );
     }

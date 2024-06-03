@@ -2,6 +2,7 @@ import { Box, Typography, Button, Container } from "@mui/material";
 import { styled } from "@mui/system";
 import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
 import { Link as RouterLink } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const NothingToShowContainer = styled(Container)`
   display: flex;
@@ -26,7 +27,15 @@ const HomeButton = styled(Button)`
   margin-top: 20px;
 `;
 
-const NothingToShow = () => {
+const NothingToShow = ({ setQueryParams, queryParams }) => {
+  const setQueryParamshandle = () =>
+    setQueryParams({
+      ...queryParams,
+      page: 1,
+      search: "",
+      isSearch: true,
+      isHomeNav: true,
+    });
   return (
     <NothingToShowContainer>
       <IconWrapper>
@@ -43,7 +52,8 @@ const NothingToShow = () => {
         variant="contained"
         color="primary"
         component={RouterLink}
-        to="/"
+        onClick={setQueryParamshandle}
+        to="/home"
       >
         Go to Homepage
       </HomeButton>
@@ -52,3 +62,7 @@ const NothingToShow = () => {
 };
 
 export default NothingToShow;
+NothingToShow.propTypes = {
+  setQueryParams: PropTypes.any,
+  queryParams: PropTypes.any,
+};

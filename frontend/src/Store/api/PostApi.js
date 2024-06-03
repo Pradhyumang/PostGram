@@ -29,7 +29,12 @@ const postApi = createApi({
         return res;
       },
       merge: (currentCache, newItems, { arg }) => {
-        if (arg === 0 || (arg.search && arg.isSearch) || arg.isSearchEmpty) {
+        console.log(arg.search);
+        if (
+          arg === 0 ||
+          (arg.search && arg.isSearch) ||
+          (arg.isHomeNav && arg.search === "")
+        ) {
           return newItems;
         }
         // console.log(JSON.parse(JSON.stringify(currentCache)), "currentCache");
