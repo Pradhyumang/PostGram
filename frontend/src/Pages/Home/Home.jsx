@@ -7,21 +7,34 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import NothingToShow from "../NothingToShow";
-const initialState = {
-  page: 1,
-  perPage: 5,
-  search: "",
-  isMyPostsOnly: false,
-  isPrivate: false,
-  isSearch: false,
-  isHomeNav: false,
-};
+
 const Home = () => {
+  const { search: urlParam } = useLocation();
+  const search = new URLSearchParams(urlParam).get("search");
+  const initialState = {
+    page: 1,
+    perPage: 2,
+    search: search || "",
+    isMyPostsOnly: false,
+    isPrivate: false,
+    isSearch: false,
+    isHomeNav: false,
+  };
+  // const initialState = useMemo(
+  //   () => ({
+  //     page: 1,
+  //     perPage: 2,
+  //     search: search || "",
+  //     isMyPostsOnly: false,
+  //     isPrivate: false,
+  //     isSearch: false,
+  //     isHomeNav: false,
+  //   }),
+  //   [search]
+  // );
   const [queryParams, setQueryParams] = useState(initialState);
   const navigate = useNavigate();
   // const { search } = useParams();
-  const { search: urlParam } = useLocation();
-  const search = new URLSearchParams(urlParam).get("search");
   // console.log(search);
   const {
     // isError,

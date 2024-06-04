@@ -1,7 +1,7 @@
 import React from "react";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
 import HomeIcon from "@mui/icons-material/Home";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { removeCookie } from "../../../Cookie/cookie";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -67,7 +67,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function NavBar() {
   const [state, setState] = React.useState({ left: false });
   const navigate = useNavigate();
-
+  // const { search: urlParam } = useLocation();
+  // const search = new URLSearchParams(urlParam).get("search");
+  // let searchFromUrl = search ? search : "";
+  // console.log(search);
+  const [serachParams] = useSearchParams();
+  console.log(serachParams);
   const logout = () => {
     removeCookie("accessToken");
     navigate("/");
@@ -211,9 +216,11 @@ export default function NavBar() {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
+                defaultValue={serachParams.get("search")}
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
                 onChange={handleSearchChange}
+                // value={searchFromUrl}
               />
             </Search>
           </Toolbar>

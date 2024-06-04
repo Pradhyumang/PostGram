@@ -29,7 +29,7 @@ const postApi = createApi({
         return res;
       },
       merge: (currentCache, newItems, { arg }) => {
-        console.log(arg.search);
+        // console.log(arg.search);
         if (
           arg === 0 ||
           (arg.search && arg.isSearch) ||

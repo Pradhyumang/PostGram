@@ -15,7 +15,7 @@ export const PublicRoute = () => {
   }, [navigate, isAuthenticated, token]);
   useEffect(() => {
     const rootElement = document.getElementById("root").parentElement;
-    console.log(rootElement, "PublicRoute");
+    // console.log(rootElement, "PublicRoute");
     if (rootElement) {
       rootElement.style.backgroundImage = token
         ? ""
