@@ -7,7 +7,8 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { MoreVert } from "@mui/icons-material";
+import { Favorite, MoreVert, Share } from "@mui/icons-material";
+import LineWeightIcon from "@mui/icons-material/LineWeight";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useFetchImageQuery } from "../../Store/api/PostApi";
@@ -19,6 +20,7 @@ const Nodata = {
 const PostComp = ({ data }) => {
   const { title, description, image } = data ? data : Nodata;
   const [imgSrc, setImgSrc] = useState(image);
+  const [toogleHeart, setToogleHeart] = useState(false);
   const { data: Image, isSuccess } = useFetchImageQuery(data?._id);
   useEffect(() => {
     if (isSuccess) {
@@ -43,6 +45,12 @@ const PostComp = ({ data }) => {
       }}
     >
       <CardHeader
+        avatar={
+          <LineWeightIcon
+            sx={{ bgcolor: "" }}
+            aria-label="recipe"
+          ></LineWeightIcon>
+        }
         action={
           <IconButton aria-label="settings">
             <MoreVert />
@@ -64,10 +72,17 @@ const PostComp = ({ data }) => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          {/* <Favorite sx={{ color: "" }} /> */}
+        <IconButton
+          aria-label="add to favorites"
+          onClick={() =>
+            toogleHeart ? setToogleHeart(false) : setToogleHeart(true)
+          }
+        >
+          <Favorite sx={{ color: toogleHeart ? "red" : "" }} />
         </IconButton>
-        <IconButton aria-label="share">{/* <Share /> */}</IconButton>
+        <IconButton aria-label="share">
+          <Share />
+        </IconButton>
       </CardActions>
     </Card>
   );
